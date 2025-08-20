@@ -1,3 +1,4 @@
 .env
 venv/
 qdrant_storage/
+qdrant_data/

@@ -1,5 +1,6 @@
 # services/ingestion/config.py
 import os
+from typing import List
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -29,13 +30,24 @@ class Settings(BaseSettings):
     # Embedding Model
     EMBEDDING_MODEL: str = "BAAI/bge-large-en-v1.5"
     
+    # Ingestion Config
+    INGESTION_INTERVAL: int = int(os.getenv("INGESTION_INTERVAL", 1))  # in hours
+    
     # Ingestion settings
     BATCH_SIZE: int = 50
     MAX_POSTS_PER_SYMBOL: int = 100
     UPDATE_INTERVAL_MINUTES: int = 15
     
     # Symbols to track
-    DEFAULT_SYMBOLS: list = ["BTC", "ETH", "SOL", "AVAX", "MATIC"]
+    DEFAULT_SYMBOLS: List[str] = ["BTC", "ETH", "SOL", "AVAX", "MATIC"]
+    
+    @property
+    def SYMBOLS(self) -> List[str]:
+        """Get symbols from environment or use defaults"""
+        symbols_env = os.getenv("SYMBOLS", "")
+        if symbols_env:
+            return [s.strip() for s in symbols_env.split(",") if s.strip()]
+        return self.DEFAULT_SYMBOLS
     
     class Config:
         env_file = ".env"

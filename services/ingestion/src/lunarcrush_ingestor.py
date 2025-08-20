@@ -1,4 +1,3 @@
-# services/ingestion/src/lunarcrush_ingester.py
 import asyncio
 import httpx
 from datetime import datetime, timezone
@@ -19,8 +18,7 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config import settings
 
-class LunarCrushIngester:
-    """Handles data ingestion from LunarCrush API to Qdrant"""
+class LunarCrushIngestor:
     
     def __init__(self):
         # Initialize clients
@@ -35,7 +33,7 @@ class LunarCrushIngester:
         # Cache for deduplication
         self.processed_posts = set()
         
-        logger.info(f"Initialized LunarCrush Ingester")
+        logger.info(f"Initialized LunarCrush ingestor")
         logger.info(f"Qdrant: {settings.QDRANT_HOST}:{settings.QDRANT_PORT}")
         logger.info(f"Embedding model: {settings.EMBEDDING_MODEL}")
     
@@ -351,16 +349,16 @@ class LunarCrushIngester:
         return stats
 
 async def main():
-    """Test the ingester with a single symbol"""
-    ingester = LunarCrushIngester()
+    """Test the ingestor with a single symbol"""
+    ingestor = LunarCrushIngestor()
     
     # Test with one symbol
-    await ingester.ingest_symbol("BTC")
+    await ingestor.ingest_symbol("BTC")
     
     # Print stats
-    stats = ingester.get_ingestion_stats()
+    stats = ingestor.get_ingestion_stats()
     logger.info(f"Ingestion stats: {json.dumps(stats, indent=2)}")
 
 if __name__ == "__main__":
     # Run test
-    asyncio.run(main())git c
+    asyncio.run(main())
